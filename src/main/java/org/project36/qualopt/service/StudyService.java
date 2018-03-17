@@ -1,6 +1,7 @@
 package org.project36.qualopt.service;
 
 import org.apache.commons.lang3.CharEncoding;
+import org.project36.qualopt.domain.Participant;
 import org.project36.qualopt.domain.Study;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,25 +38,34 @@ public class StudyService {
             javaMailSender.setSession(getUserEmailSession());
             MimeMessage message = javaMailSender.createMimeMessage();
             message.setFrom(new InternetAddress(userEmail));
-            message.addRecipients(Message.RecipientType.TO, study
-                .getParticipants()
-                .stream()
-                .map(participant -> {
-                    try {
-                        return new InternetAddress(participant.getEmail());
-                    } catch (AddressException e) {
-                        log.error("Failed to create internet address from participant email", e);
-                        throw new RuntimeException(e);
-                    }
-                })
-                .toArray(Address[]::new));
-            message.setSubject(subject, CharEncoding.UTF_8);
-            message.setText(content, CharEncoding.UTF_8);
-            javaMailSender.send(message);
-            log.debug("Sent invitation email for study '{}'", study);
+            for (Participant participant : study.getParticipants()) {
+                InternetAddress participantEmailAddress;
+                try {
+                     participantEmailAddress = new InternetAddress(participant.getEmail());
+                } catch (AddressException e) {
+                    log.error("Failed to create internet address from participant email", e);
+                    throw new RuntimeException(e);
+                }
+                message.addRecipient(Message.RecipientType.TO, participantEmailAddress);
+                String customisedContent = customiseEmailContent(participant, content);
+                message.setSubject(subject, CharEncoding.UTF_8);
+                message.setText(customisedContent, CharEncoding.UTF_8);
+                javaMailSender.send(message);
+                log.debug("Sent invitation email for study '{}'", study);
+            }
+
         } catch (MessagingException e) {
             log.error("Failed to send invitation email", e);
         }
+    }
+
+    private String customiseEmailContent(Participant participant, String content) {
+        content.replaceAll("{location}", participant.getLocation());
+        content.replaceAll("{occupation}", participant.getOccupation());
+        content.replaceAll("{programmingLanguage}", participant.getProgrammingLanguage());
+        content.replaceAll("{numberOfContributions}", participant.getNumberOfContributions().toString());
+        content.replaceAll("{numberOfRepositories}", participant.getNumberOfRepositories().toString());
+        return content;
     }
 
     private Session getUserEmailSession(){
