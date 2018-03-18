@@ -21,6 +21,7 @@ export class StudyDialogComponent implements OnInit {
 
     study: Study;
     isSaving: boolean;
+    hidingCustomInfo: boolean;
 
     users: User[];
 
@@ -39,6 +40,7 @@ export class StudyDialogComponent implements OnInit {
 
     ngOnInit() {
         this.isSaving = false;
+        this.hidingCustomInfo = true;
         this.userService.query()
             .subscribe((res: ResponseWrapper) => { this.users = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
         this.participantService.query()
@@ -136,6 +138,10 @@ export class StudyDialogComponent implements OnInit {
         }else {
             return 'Create Study';
         }
+    }
+
+    showCustomInfo() {
+        this.hidingCustomInfo = !this.hidingCustomInfo;
     }
 }
 
