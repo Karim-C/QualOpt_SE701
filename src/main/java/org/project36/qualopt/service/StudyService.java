@@ -20,6 +20,7 @@ import java.util.Properties;
 public class StudyService {
 
     private static final Logger log = LoggerFactory.getLogger(StudyService.class);
+
     public static final String CUSTOM_LAST_NAME = "--lastName";
     public static final String CUSTOM_FIRST_NAME = "--firstName";
     public static final String CUSTOM_LOCATION = "--location";
