@@ -32,6 +32,12 @@ public class Participant implements Serializable {
     @Column(name = "occupation")
     private String occupation;
 
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
+
     @Column(name = "location")
     private String location;
 
@@ -160,6 +166,22 @@ public class Participant implements Serializable {
         this.studies = studies;
     }
 
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -183,7 +205,9 @@ public class Participant implements Serializable {
     @Override
     public String toString() {
         return "Participant{" +
-            "id=" + getId() +
+            "id=" + getId() + "'" +
+            ", firstName='" + getFirstName() + "'" +
+            ", lastName='" + getLastName() + "'" +
             ", email='" + getEmail() + "'" +
             ", occupation='" + getOccupation() + "'" +
             ", location='" + getLocation() + "'" +
