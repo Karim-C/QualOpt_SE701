@@ -1,19 +1,21 @@
 package org.project36.qualopt.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-
 import org.apache.commons.codec.binary.Base64;
 import org.project36.qualopt.domain.Document;
 import org.project36.qualopt.repository.DocumentRepository;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.persistence.EntityNotFoundException;
 
 /**
  * REST controller for managing Email.
@@ -33,8 +35,10 @@ public class DocumentResource {
     @RequestMapping("/documents/{id}/download")
     @Timed
     public ResponseEntity<Resource> downloadDocument(@PathVariable Long id) {
-        Document document = documentRepository.findOne(id);
-        if(document==null) {
+        Document document;
+        try {
+            document = documentRepository.getOne(id);
+        } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
@@ -42,10 +46,10 @@ public class DocumentResource {
         ByteArrayResource resource = new ByteArrayResource(fileBlob);
 
         return ResponseEntity.ok()
-            .header("Content-Disposition", String.format("inline; filename=\"" + document.getFilename() + "\""))
+            .header("Content-Disposition", "inline; filename=\"" + document.getFilename() + "\"")
             .contentLength(fileBlob.length)
             .contentType(MediaType.parseMediaType("application/octet-stream"))
             .body(resource);
-    }
 
+        }
 }

@@ -13,14 +13,14 @@ import java.util.List;
 /**
  * Spring Data JPA repository for the Study entity.
  */
-@SuppressWarnings("unused")
+// @SuppressWarnings("unused")
 @Repository
 public interface StudyRepository extends JpaRepository<Study, Long> {
 
     @Query("select study from Study study where study.user.login = ?#{principal.username}")
     Page<Study> findByUserIsCurrentUser(Pageable pageable);
 
-    @Query("select distinct study from Study study left join fetch study.participants")
+    @Query("select distinct study from Study study left join fetch study.participants left join fetch study.documents")
     List<Study> findAllWithEagerRelationships();
 
     @Query("select study from Study study left join fetch study.participants left join fetch study.documents where study.id =:id")

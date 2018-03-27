@@ -142,7 +142,6 @@ public class StudyResource {
         if(study==null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        
         StudyInfoDTO studyInfo = new StudyInfoDTO(study);
         return new ResponseEntity<>(studyInfo, HttpStatus.OK);
     }
@@ -157,7 +156,7 @@ public class StudyResource {
     @Timed
     public ResponseEntity<Void> deleteStudy(@PathVariable Long id) {
         log.debug("REST request to delete Study : {}", id);
-        studyRepository.delete(id);
+        studyRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
@@ -185,7 +184,7 @@ public class StudyResource {
     @PostMapping(path = "/studies/send",
         produces={MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
     @Timed
-    public ResponseEntity sendStudy(@Valid @RequestBody Study study) throws URISyntaxException {
+    public ResponseEntity<Object> sendStudy(@Valid @RequestBody Study study) throws URISyntaxException {
         log.debug("REST request to send Study : {}", study);
         if (study == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

@@ -104,10 +104,6 @@ public class StudyService {
 
     /**
      * This method goes through text and customises it with the participants personal details.
-     *
-     * @param participant
-     * @param content
-     * @return customisedContent
      */
     private String customiseEmailText(Participant participant, String content) {
         String customisedContent = content.replaceAll(CUSTOM_FIRST_NAME, participant.getFirstName());

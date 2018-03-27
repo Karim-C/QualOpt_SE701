@@ -64,7 +64,7 @@ public class Participant implements Serializable {
     }
 
     public String getEmail() {
-        return email;
+        return getString(email);
     }
 
     public Participant email(String email) {
@@ -77,7 +77,7 @@ public class Participant implements Serializable {
     }
 
     public String getOccupation() {
-        return occupation;
+        return getString(occupation);
     }
 
     public Participant occupation(String occupation) {
@@ -90,7 +90,7 @@ public class Participant implements Serializable {
     }
 
     public String getLocation() {
-        return location;
+        return getString(location);
     }
 
     public Participant location(String location) {
@@ -103,7 +103,7 @@ public class Participant implements Serializable {
     }
 
     public String getProgrammingLanguage() {
-        return programmingLanguage;
+        return getString(programmingLanguage);
     }
 
     public Participant programmingLanguage(String programmingLanguage) {
@@ -175,11 +175,15 @@ public class Participant implements Serializable {
     }
 
     public String getFirstName() {
-        return firstName;
+        return getString(firstName);
     }
 
     public String getLastName() {
-        return lastName;
+        return getString(lastName);
+    }
+
+    private String getString(String s){
+        return Objects.isNull(s) ? "" : s;
     }
 
     @Override
